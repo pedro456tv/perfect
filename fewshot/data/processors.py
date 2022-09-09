@@ -433,6 +433,13 @@ class MRPC(AbstractProcessor):
         return ["false", "true"]
 
 
+class Emotion(Subj):
+    name = "emotion"
+
+    def get_verbalizers(self):
+        return ["sadness", "anger", "love", "surprise", "fear", "joy"]
+
+
 PROCESSOR_MAPPING = OrderedDict(
     [
         ('mr', MR),
@@ -449,7 +456,11 @@ PROCESSOR_MAPPING = OrderedDict(
         #glue datasets 
         ('qnli', QNLI),
         ('qqp', QQP),
-        ('mrpc', MRPC)
+        ('mrpc', MRPC),
+        # SetFit datasets
+        ('SetFit/sst-5', SST5),
+        ('SetFit/SentEval-CR', CR),
+        ('SetFit/emotion', Emotion),
     ]
 )
 

@@ -39,7 +39,7 @@ class AbstractTask(abc.ABC):
             datasets["test"] = datasets["validation"]
 
         if self.task in ["mr", "cr", "subj", "SST-2", "trec",  "sst-5",
-                         "boolq", "rte", "cb", "wic", "qnli", "qqp", "mrpc"]:
+                         "boolq", "rte", "cb", "wic", "qnli", "qqp", "mrpc", "emotion"]:
             # First filter, then shuffle, otherwise this results in a bug.
             # Samples `num_samples` elements from train as training and development sets.
             sampled_train = []
@@ -160,6 +160,17 @@ class MRPC(QQP):
     labels_list = ['0', '1'] # ["not_equivalent", "equivalent"]
     metric = [metrics.accuracy, metrics.f1]
 
+class Emotion(AbstractTask):
+    task = "emotion"
+    num_labels = 6
+    labels_list = ['0', '1', '2', '3', '4', '5']
+    metric = [metrics.accuracy]
+    
+    def load_datasets(self):
+        dsets = load_dataset('SetFit/emotion')
+        for split, dset in dsets.items():
+            dsets[split] = dset.rename_column("text", "source")
+        return dsets
 
 
 TASK_MAPPING = OrderedDict(
@@ -178,7 +189,11 @@ TASK_MAPPING = OrderedDict(
         # glue datasets
         ('qqp', QQP),
         ('qnli', QNLI),
-        ('mrpc', MRPC)
+        ('mrpc', MRPC),
+        # SetFit datasets
+        ('SetFit/sst-5', SST5),
+        ('SetFit/SentEval-CR', CR),
+        ('SetFit/emotion', Emotion),
     ]
 )
 
