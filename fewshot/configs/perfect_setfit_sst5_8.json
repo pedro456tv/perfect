@@ -1,11 +1,11 @@
 {
-   "task": "emotion", 
+   "task": "SetFit/sst-5", 
    "max_seq_length": 128, 
    "per_device_train_batch_size": 32,
    "per_device_eval_batch_size": 512,
    "K": 8,
    "data_dir": "datasets_processed",
-   "output_dir": "outputs-emotion",
+   "output_dir": "outputs-sst5",
    "model_name_or_path": "roberta-large",
    "do_train": true,
    "do_eval": true,
