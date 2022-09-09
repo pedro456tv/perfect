@@ -1,7 +1,7 @@
 transformers==4.10.2
 tabulate
 pandas 
-datasets==1.13
+datasets==1.17 # Needed to load JSON from Hub
 sentencepiece != 0.1.92
 protobuf
 rouge-score

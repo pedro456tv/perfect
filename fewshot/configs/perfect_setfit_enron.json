@@ -1,6 +1,6 @@
 {
-  "task": "emotion", 
-  "max_seq_length": 128, 
+  "task": "enron_spam", 
+  "max_seq_length": 256, 
   "per_device_train_batch_size": 32,
   "per_device_eval_batch_size": 512,
   "K": 8,

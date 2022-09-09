@@ -39,7 +39,8 @@ class AbstractTask(abc.ABC):
             datasets["test"] = datasets["validation"]
 
         if self.task in ["mr", "cr", "subj", "SST-2", "trec",  "sst-5",
-                         "boolq", "rte", "cb", "wic", "qnli", "qqp", "mrpc", "emotion"]:
+                         "boolq", "rte", "cb", "wic", "qnli", "qqp", "mrpc", 
+                         "emotion", "enron_spam", "ag_news", "amazon_cf"]:
             # First filter, then shuffle, otherwise this results in a bug.
             # Samples `num_samples` elements from train as training and development sets.
             sampled_train = []
@@ -167,7 +168,43 @@ class Emotion(AbstractTask):
     metric = [metrics.accuracy]
     
     def load_datasets(self):
-        dsets = load_dataset('emotion')
+        dsets = load_dataset('SetFit/emotion')
+        for split, dset in dsets.items():
+            dsets[split] = dset.rename_column("text", "source")
+        return dsets
+
+class EnronSpam(AbstractTask):
+    task = "enron_spam"
+    num_labels = 2
+    labels_list = ['0', '1']
+    metric = [metrics.accuracy]
+    
+    def load_datasets(self):
+        dsets = load_dataset('SetFit/enron_spam')
+        for split, dset in dsets.items():
+            dsets[split] = dset.rename_column("text", "source")
+        return dsets
+
+class AGNews(AbstractTask):
+    task = "ag_news"
+    num_labels = 4
+    labels_list = ['0', '1', '2', '3']
+    metric = [metrics.accuracy]
+    
+    def load_datasets(self):
+        dsets = load_dataset('SetFit/ag_news')
+        for split, dset in dsets.items():
+            dsets[split] = dset.rename_column("text", "source")
+        return dsets
+
+class AmazonCF(AbstractTask):
+    task = "amazon_cf"
+    num_labels = 2
+    labels_list = ['0', '1']
+    metric = [metrics.mcc]
+    
+    def load_datasets(self):
+        dsets = load_dataset('SetFit/amazon_counterfactual_en')
         for split, dset in dsets.items():
             dsets[split] = dset.rename_column("text", "source")
         return dsets
@@ -194,6 +231,9 @@ TASK_MAPPING = OrderedDict(
         ('SetFit/sst-5', SST5),
         ('SetFit/SentEval-CR', CR),
         ('emotion', Emotion), # Doesn't work with SetFit/emotion for some reason
+        ("enron_spam", EnronSpam),
+        ("ag_news", AGNews),
+        ("amazon_cf", AmazonCF)
     ]
 )
 

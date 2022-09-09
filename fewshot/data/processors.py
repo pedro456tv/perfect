@@ -432,6 +432,7 @@ class MRPC(AbstractProcessor):
             return ["No", "Yes"]
         return ["false", "true"]
 
+## SETFIT datasets ##
 
 class Emotion(Subj):
     name = "emotion"
@@ -439,6 +440,23 @@ class Emotion(Subj):
     def get_verbalizers(self):
         return ["sadness", "anger", "love", "surprise", "fear", "joy"]
 
+class EnronSpam(Subj):
+    name = "enron_spam"
+
+    def get_verbalizers(self):
+        return ["ham", "spam"]
+
+class AGNews(Subj):
+    name = "ag_news"
+
+    def get_verbalizers(self):
+        return ["business", "technology", "sports", "world"]
+
+class AmazonCF(Subj):
+    name = "amazon_cf"
+
+    def get_verbalizers(self):
+        return ["not counterfactual", "counterfactual"]
 
 PROCESSOR_MAPPING = OrderedDict(
     [
@@ -461,6 +479,9 @@ PROCESSOR_MAPPING = OrderedDict(
         ('SetFit/sst-5', SST5),
         ('SetFit/SentEval-CR', CR),
         ('emotion', Emotion),
+        ('enron_spam', EnronSpam),
+        ('ag_news', AGNews),
+        ('amazon_cf', AmazonCF),
     ]
 )
 

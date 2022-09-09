@@ -4,7 +4,7 @@
 # LICENSE file in the root directory of this source tree.
 
 import numpy as np
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score, matthews_corrcoef
 from collections import defaultdict
 
 
@@ -43,3 +43,6 @@ def f1_macro(predictions, targets, extra_info=None):
 
 def f1(predictions, targets, extra_info=None):
     return {"f1": 100*f1_score(targets, predictions)}
+
+def mcc(predictions, targets, extra_info=None):
+    return {"matthews_correlation": 100*matthews_corrcoef(targets, predictions)}
