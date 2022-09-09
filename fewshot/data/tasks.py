@@ -167,7 +167,7 @@ class Emotion(AbstractTask):
     metric = [metrics.accuracy]
     
     def load_datasets(self):
-        dsets = load_dataset('SetFit/emotion')
+        dsets = load_dataset('emotion')
         for split, dset in dsets.items():
             dsets[split] = dset.rename_column("text", "source")
         return dsets
@@ -193,7 +193,7 @@ TASK_MAPPING = OrderedDict(
         # SetFit datasets
         ('SetFit/sst-5', SST5),
         ('SetFit/SentEval-CR', CR),
-        ('SetFit/emotion', Emotion),
+        ('emotion', Emotion), # Doesn't work with SetFit/emotion for some reason
     ]
 )
 

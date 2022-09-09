@@ -460,7 +460,7 @@ PROCESSOR_MAPPING = OrderedDict(
         # SetFit datasets
         ('SetFit/sst-5', SST5),
         ('SetFit/SentEval-CR', CR),
-        ('SetFit/emotion', Emotion),
+        ('emotion', Emotion),
     ]
 )
 
