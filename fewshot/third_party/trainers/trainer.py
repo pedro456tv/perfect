@@ -16,6 +16,11 @@ from torch import nn
 import torch.nn.functional as F
 import collections
 
+# Workaround for bug in `Dataset.filter()` with this `datasets` version
+# See: https://github.com/huggingface/datasets/issues/2943
+from datasets import set_caching_enabled
+set_caching_enabled(False)
+
 
 from transformers import __version__
 from transformers.configuration_utils import PretrainedConfig
