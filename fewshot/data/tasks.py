@@ -228,7 +228,6 @@ TASK_MAPPING = OrderedDict(
         ('qnli', QNLI),
         ('mrpc', MRPC),
         # SetFit datasets
-        ('SetFit/sst-5', SST5),
         ('SetFit/SentEval-CR', CR),
         ('emotion', Emotion), # Doesn't work with SetFit/emotion for some reason
         ("enron_spam", EnronSpam),

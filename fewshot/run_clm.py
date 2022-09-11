@@ -19,6 +19,8 @@ import numpy as np
 import os
 import sys
 import functools
+import pathlib
+import json
 
 os.environ["WANDB_DISABLED"] = "true"
 
@@ -114,6 +116,16 @@ def main():
 
     # Set seed before initializing model.
     set_seed(training_args.seed)
+
+    # Create directory for final results
+    parent_directory = pathlib.Path(__file__).parent.absolute()
+    results_path = (
+    parent_directory
+    / "results/perfect"
+    / data_args.task
+    / f"train-{data_args.K}-{data_args.data_seed}"
+    )
+    os.makedirs(results_path, exist_ok=True)
 
     task = AutoTask.get(
         task=data_args.task, 
@@ -488,8 +500,21 @@ def main():
         predict_samples = predict_dataset[0].num_rows if isinstance(predict_dataset, list) else predict_dataset.num_rows
         max_predict_samples = data_args.max_predict_samples if data_args.max_predict_samples is not None else predict_samples
         metrics["predict_samples"] = min(max_predict_samples, predict_samples)
+        logger.info(f"Metrics on test set: {metrics}")
         trainer.log_metrics("predict", metrics)
         trainer.save_metrics("predict", metrics)
+
+        # Store test set predictions
+        logger.info(f"Storing test set predictions in {results_path}")
+
+        with open(os.path.join(results_path, "results.json"), "w") as f_out:
+            json.dump(
+                {"score": metrics["predict_accuracy"], "measure": data_args.metric_name},
+                f_out,
+                sort_keys=True,
+            )
+
+
     
     if training_args.compute_memory or training_args.compute_time or training_args.compute_inference_time:
         print(performance_metrics)
