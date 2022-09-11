@@ -1,6 +1,6 @@
-for dataset in sst-5 ag_news cr enron_spam amazon_cf emotion; do
-    if [ $dataset == "amazon_cf"]; then
-        metric_name=mcc
+for dataset in sst-5 amazon_cf cr emotion enron_spam ag_news; do
+    if [ $dataset == amazon_cf ]; then
+        metric_name=matthews_correlation
     else
         metric_name=accuracy
     fi
