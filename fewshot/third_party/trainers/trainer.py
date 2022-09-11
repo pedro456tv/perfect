@@ -263,16 +263,22 @@ class BaseTrainer(Trainer):
 
     def get_masks_embeds(self, model, batch):
         """Returns mask embeddings of size batch_size x num_masks x hidden_dim"""
+        if isinstance(model, torch.nn.DataParallel):
+            encoder = model.module.roberta
+            config = model.module.config
+        else:
+            encoder = model.roberta
+            config = model.config
         input_ids = batch['input_ids']
         attention_mask = batch['attention_mask']
         if self.args.prompt_tune:
             input_ids, attention_mask, inputs_embeds = model.append_prompts(input_ids, attention_mask, inputs_embeds=None)
-            hidden_states = model.roberta(input_ids=None, attention_mask=attention_mask, inputs_embeds=inputs_embeds)
+            hidden_states = encoder(input_ids=None, attention_mask=attention_mask, inputs_embeds=inputs_embeds)
         else:
-            hidden_states = model.roberta(input_ids=input_ids, attention_mask=attention_mask)
+            hidden_states = encoder(input_ids=input_ids, attention_mask=attention_mask)
         hidden_states = hidden_states[0]
         batch_size = input_ids.shape[0]
-        mask_indices = (input_ids == model.config.mask_token_id).nonzero()[:, -1].view(batch_size, -1)
+        mask_indices = (input_ids == config.mask_token_id).nonzero()[:, -1].view(batch_size, -1)
         return hidden_states[torch.arange(hidden_states.shape[0]).unsqueeze(-1), mask_indices]
 
     def _compute_per_token_train_centroids(self, model):
