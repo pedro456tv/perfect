@@ -513,7 +513,7 @@ def main():
 
         with open(os.path.join(results_path, "results.json"), "w") as f_out:
             json.dump(
-                {"score": metrics["predict_accuracy"], "measure": data_args.metric_name},
+                {"score": metrics[f"predict_{data_args.metric_name}"], "measure": data_args.metric_name},
                 f_out,
                 sort_keys=True,
             )
