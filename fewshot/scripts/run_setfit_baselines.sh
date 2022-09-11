@@ -1,4 +1,9 @@
-for dataset in sst-5 ag_news cr enron_spam amazon_cf; do
+for dataset in sst-5 ag_news cr enron_spam amazon_cf emotion; do
+    if [ $dataset == "amazon_cf"]; then
+        metric_name=mcc
+    else
+        metric_name=accuracy
+    fi
     for sample_size in 8 64; do
         for data_seed in 0 1; do
         cat > configs/setfit_template.json <<EOF
@@ -6,7 +11,7 @@ for dataset in sst-5 ag_news cr enron_spam amazon_cf; do
 "task": "$dataset", 
 "max_seq_length": 256, 
 "per_device_train_batch_size": 32,
-"per_device_eval_batch_size": 512,
+"per_device_eval_batch_size": 128,
 "K": $sample_size,
 "data_dir": "datasets_processed",
 "output_dir": "outputs",
@@ -15,7 +20,7 @@ for dataset in sst-5 ag_news cr enron_spam amazon_cf; do
 "do_eval": true,
 "do_predict": true,
 "learning_rate": 1e-4,
-"metric_name": "accuracy",
+"metric_name": "$metric_name",
 "max_steps": 6, 
 "eval_steps": 6, 
 "save_steps": 6,
@@ -52,6 +57,6 @@ for dataset in sst-5 ag_news cr enron_spam amazon_cf; do
 EOF
         echo "Running script with dataset $dataset and sample size $sample_size and seed $data_seed"
         python run_clm.py configs/setfit_template.json
-        done
-    done
+done
+done
 done
