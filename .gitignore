@@ -162,4 +162,4 @@ cython_debug/
 datasets/*
 fewshot/datasets_processed/*
 outputs*
-fewshot/results/*
+fewshot/results/*   
