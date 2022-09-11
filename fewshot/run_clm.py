@@ -126,6 +126,10 @@ def main():
     / f"train-{data_args.K}-{data_args.data_seed}"
     )
     os.makedirs(results_path, exist_ok=True)
+    # Skip prior experiments
+    if os.path.exists(os.path.join(results_path / "results.json")):
+        logger.info("Split already scored! Skipping ...")
+        return
 
     task = AutoTask.get(
         task=data_args.task, 

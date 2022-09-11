@@ -1,13 +1,9 @@
-for dataset in sst-5 ag_news; do
-    for sample_size in 8 64; do
-        for data_seed in 0 1; do
-        cat > configs/setfit_template.json <<EOF
 {
-"task": "$dataset", 
+"task": "ag_news", 
 "max_seq_length": 256, 
 "per_device_train_batch_size": 32,
 "per_device_eval_batch_size": 512,
-"K": $sample_size,
+"K": 64,
 "data_dir": "datasets_processed",
 "output_dir": "outputs",
 "model_name_or_path": "roberta-large",
@@ -19,7 +15,7 @@ for dataset in sst-5 ag_news; do
 "max_steps": 6, 
 "eval_steps": 6, 
 "save_steps": 6,
-"data_seed": $data_seed,
+"data_seed": 0,
 "seed": 1,
 "load_best_model_at_end": true,
 "metric_for_best_model": "average",
@@ -49,9 +45,3 @@ for dataset in sst-5 ag_news; do
 "mask_position": "1",
 "fp16": true
 }
-EOF
-        echo "Running script with dataset $dataset and sample size $sample_size and seed $data_seed"
-        python run_clm.py configs/setfit_template.json
-        done
-    done
-done
