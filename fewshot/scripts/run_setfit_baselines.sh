@@ -1,4 +1,4 @@
-for dataset in sst-5 ag_news; do
+for dataset in sst-5 ag_news cr enron_spam amazon_cf; do
     for sample_size in 8 64; do
         for data_seed in 0 1; do
         cat > configs/setfit_template.json <<EOF
