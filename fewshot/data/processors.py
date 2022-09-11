@@ -476,7 +476,6 @@ PROCESSOR_MAPPING = OrderedDict(
         ('qqp', QQP),
         ('mrpc', MRPC),
         # SetFit datasets
-        ('SetFit/SentEval-CR', CR),
         ('emotion', Emotion),
         ('enron_spam', EnronSpam),
         ('ag_news', AGNews),
