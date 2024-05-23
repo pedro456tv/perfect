@@ -7,4 +7,4 @@ protobuf
 rouge-score
 nltk
 py7zr
-sklearn 
+scikit-learn 

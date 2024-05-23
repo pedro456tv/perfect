@@ -6,7 +6,7 @@
 import numpy as np
 from sklearn.metrics import f1_score, matthews_corrcoef
 from collections import defaultdict
-
+from sklearn.metrics import classification_report
 
 def accuracy(predictions, targets, extra_info=None) -> dict:
     """Computes the average accuracy."""
@@ -38,6 +38,7 @@ def group_exact_match(predictions, targets, extra_info):
 
 
 def f1_macro(predictions, targets, extra_info=None):
+    print(classification_report(targets,predictions, digits=3))
     return {"f1-macro": 100*f1_score(targets, predictions, average="macro")}
 
 

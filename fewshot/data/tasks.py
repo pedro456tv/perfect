@@ -6,9 +6,11 @@
 import abc
 from collections import OrderedDict
 from os.path import join 
-from datasets import load_dataset, concatenate_datasets
+from datasets import load_dataset, concatenate_datasets, Dataset
+from sklearn.model_selection import train_test_split
 import functools
 import numpy as np 
+import pandas as pd
 import sys 
 import torch 
 from collections import Counter
@@ -40,7 +42,7 @@ class AbstractTask(abc.ABC):
 
         if self.task in ["mr", "cr", "subj", "SST-2", "trec",  "sst-5",
                          "boolq", "rte", "cb", "wic", "qnli", "qqp", "mrpc", 
-                         "emotion", "enron_spam", "ag_news", "amazon_cf"]:
+                         "emotion", "enron_spam", "ag_news", "amazon_cf", "anketa"]:
             # First filter, then shuffle, otherwise this results in a bug.
             # Samples `num_samples` elements from train as training and development sets.
             sampled_train = []
@@ -209,6 +211,50 @@ class AmazonCF(AbstractTask):
             dsets[split] = dset.rename_column("text", "source")
         return dsets
 
+class Anketa(AbstractTask):
+    task = "anketa"
+    num_labels = 3 
+    labels_list = ['0', '1', '2']
+    metric = [metrics.accuracy, metrics.f1_macro]
+    
+    def load_datasets(self):
+
+        data_train = pd.read_csv('data_files/data_train_192.csv',sep=',')
+        data_test = pd.read_csv('data_files/data_test_192.csv', sep = ',')
+        
+        data_train['class_label'] = np.where(data_train['class_label'] == -1, 2, data_train['class_label'])
+        data_test['class_label'] = np.where(data_test['class_label'] == -1, 2, data_test['class_label'])
+        train_text,train_label = data_train['comment'], data_train['class_label']
+        test_text,test_label = data_test['comment'], data_test['class_label']
+    
+        dsets = {'train':Dataset.from_dict({'source':train_text, 'label':train_label}),
+            'test':Dataset.from_dict({'source':test_text, 'label':test_label})
+        }
+        
+        return dsets
+
+class AnketaBinary(AbstractTask):
+    task = "anketa_binary"
+    num_labels = 2 
+    labels_list = ['0', '1']
+    metric = [metrics.accuracy, metrics.f1_macro]
+    
+    def load_datasets(self):
+
+        data_train = pd.read_csv('data_files/data_train_128_2.csv',sep=',')
+        data_test = pd.read_csv('data_files/data_test_128_2.csv', sep = ',')
+        
+        data_train['class_label'] = np.where(data_train['class_label'] == -1, 0, data_train['class_label'])
+        data_test['class_label'] = np.where(data_test['class_label'] == -1, 0, data_test['class_label'])
+        train_text,train_label = data_train['comment'], data_train['class_label']
+        test_text,test_label = data_test['comment'], data_test['class_label']
+    
+        dsets = {'train':Dataset.from_dict({'source':train_text, 'label':train_label}),
+            'test':Dataset.from_dict({'source':test_text, 'label':test_label})
+        }
+        
+        return dsets
+
 
 TASK_MAPPING = OrderedDict(
     [
@@ -231,7 +277,10 @@ TASK_MAPPING = OrderedDict(
         ('emotion', Emotion), # Doesn't work with SetFit/emotion for some reason
         ("enron_spam", EnronSpam),
         ("ag_news", AGNews),
-        ("amazon_cf", AmazonCF)
+        ("amazon_cf", AmazonCF),
+        # My datasets
+        ("anketa", Anketa),
+        ("anketa", AnketaBinary),
     ]
 )
 

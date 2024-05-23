@@ -457,6 +457,19 @@ class AmazonCF(Subj):
 
     def get_verbalizers(self):
         return ["not counterfactual", "counterfactual"]
+    
+#My datasets
+class Anketa(Subj):
+    name = "anketa"
+
+    def get_verbalizers(self):
+        return ["neutral","positive", "negative"]
+    
+class AnketaBinary(Subj):
+    name = "anketa_binary"
+
+    def get_verbalizers(self):
+        return ["negative", "positive"]
 
 PROCESSOR_MAPPING = OrderedDict(
     [
@@ -480,6 +493,9 @@ PROCESSOR_MAPPING = OrderedDict(
         ('enron_spam', EnronSpam),
         ('ag_news', AGNews),
         ('amazon_cf', AmazonCF),
+        #My datasets
+        ('anketa', Anketa),
+        ('anketa_binary', AnketaBinary),
     ]
 )
 
